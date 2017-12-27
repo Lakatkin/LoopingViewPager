@@ -22,27 +22,16 @@ public class DemoFragmentAdapter extends LoopingFragmentPagerAdapter<Integer> {
     @Override
     protected void bindData(Fragment convertView, int listPosition) {
         DemoFragment demoFragment = (DemoFragment) convertView;
-        demoFragment.update(itemList.get(listPosition), getBackgroundColor(listPosition));
+        DemoFragmentData fragmentData = new DemoFragmentData();
+        fragmentData.color = getBackgroundColor(listPosition);
+        fragmentData.num = itemList.get(listPosition);
+        demoFragment.update(fragmentData);
     }
 
     @Override
     protected Fragment getViewFragment(int listPosition) {
         return DemoFragment.newInstance(itemList.get(listPosition), getBackgroundColor(listPosition));
     }
-
-   /* @Override
-    protected void bindItem(Fragment convertView, int listPosition) {
-
-    }*/
-
-    /*@Override
-    protected Fragment getItemFragment(Fragment convertView, int listPosition) {
-        if (convertView == null)
-            return DemoFragment.newInstance(itemList.get(listPosition), getBackgroundColor(itemList.get(listPosition)));
-        else {
-
-        }
-    }*/
 
     private int getBackgroundColor(int number) {
         switch (number) {

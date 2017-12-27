@@ -2,25 +2,25 @@ package com.asksira.loopingviewpagerdemo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.asksira.loopingviewpager.ViewPagerFragment;
+
 /**
  * Created by mlakatkin on 27.12.2017.
  */
 
-public class DemoFragment extends Fragment {
+public class DemoFragment extends ViewPagerFragment<DemoFragmentData> {
 
 
     private static final String NUM_KEY = "NUM_KEY";
     private static final String COLOR_KEY = "COLOR_KEY";
     private TextView description;
     private View image;
-    private View rootView;
+
 
     public static DemoFragment newInstance(Integer num, int colorRes) {
         Bundle args = new Bundle();
@@ -31,37 +31,29 @@ public class DemoFragment extends Fragment {
         return fragment;
     }
 
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.item_pager, null);
-            description = rootView.findViewById(R.id.description);
-            image = rootView.findViewById(R.id.image);
-            update(getArguments().getInt(NUM_KEY), getArguments().getInt(COLOR_KEY));
-        }
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        DemoFragmentData fragmentData = new DemoFragmentData();
+        fragmentData.color = getArguments().getInt(COLOR_KEY);
+        fragmentData.num = getArguments().getInt(NUM_KEY);
+        setCurrentData(fragmentData);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected View initUI(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.item_pager, null);
+        description = rootView.findViewById(R.id.description);
+        image = rootView.findViewById(R.id.image);
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-    }
-
-    @Nullable
-    @Override
-    public View getView() {
-        return rootView;
-    }
-
-    public void update(final Integer num, final int colorRes) {
-        Log.d("WTF", "update value " + num + " rootIsNull " + (rootView == null));
-        if (rootView == null)
-            return;
-                image.setBackgroundColor(getContext().getResources().getColor(colorRes));
-                description.setText(String.valueOf(num));
+    protected boolean bindData(DemoFragmentData data) {
+        if (data == null)
+            return false;
+        image.setBackgroundColor(getContext().getResources().getColor(data.color));
+        description.setText(String.valueOf(data.num));
+        return true;
     }
 }
