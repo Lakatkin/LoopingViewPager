@@ -1,50 +1,46 @@
 package com.asksira.loopingviewpager;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
-import android.util.SparseArray;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
 /**
- * A Pager Adapter that supports infinite loop.
- * This is achieved by adding a fake item at both beginning and the last,
- * And then silently changing to the same, real item, thus looks like infinite.
+ * Created by mlakatkin on 27.12.2017.
  */
 
-public abstract class LoopingPagerAdapter<T> extends PagerAdapter implements ILoopingPagerAdapter<T>{
+public abstract class LoopingFragmentPagerAdapter<T> extends FragmentPagerAdapter implements ILoopingPagerAdapter<T> {
 
     protected Context context;
+    private FragmentManager fm;
     protected ArrayList<T> itemList;
-    protected SparseArray<View> viewList = new SparseArray<>();
 
     protected boolean isInfinite = false;
     protected boolean canInfinite = true;
 
-    public LoopingPagerAdapter (Context context, ArrayList<T> itemList, boolean isInfinite) {
+
+    public LoopingFragmentPagerAdapter(Context context, FragmentManager fm, ArrayList<T> itemList, boolean isInfinite) {
+        super(fm);
+        this.fm = fm;
         this.context = context;
         this.isInfinite = isInfinite;
         setItemList(itemList);
     }
 
     @Override
-    public void setItemList (ArrayList<T> itemList) {
-        viewList = new SparseArray<>();
-        this.itemList = itemList;
+    public void setItemList(ArrayList<T> itemList) {
+        if (this.itemList != null) {
+            this.itemList.clear();
+            this.itemList.addAll(itemList);
+        } else
+            this.itemList = itemList;
         canInfinite = itemList.size() > 1;
         notifyDataSetChanged();
     }
-
-    /**Child should override this method and return the View that it wish to instantiate.
-     * View binding with data should also be occurred here.
-     *
-     * @param convertView the View that it wants to instantiate. Suggest to use ViewHolder pattern.
-     */
-    protected abstract View getItemView(View convertView, int listPosition, ViewPager container);
 
     @Override
     public T getDataItem(int listPosition) {
@@ -56,26 +52,25 @@ public abstract class LoopingPagerAdapter<T> extends PagerAdapter implements ILo
     }
 
     @Override
+    public Fragment getItem(int position) {
+        return getViewFragment(getListPosition(position));
+    }
+
+    @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Log.d("WTF", "getItem " + position);
-        int listPosition = (isInfinite && canInfinite) ? getListPosition(position) : position;
-
-        View convertView = viewList.get(position, null);
-        convertView = getItemView(convertView, listPosition, (ViewPager)container);
-        viewList.put(position, convertView);
+        Object convertView = super.instantiateItem(container, position);
+        bindData((Fragment) convertView, getListPosition(position));
         return convertView;
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
-    }
+    protected abstract void bindData(Fragment convertView, int listPosition);
+
+    protected abstract Fragment getViewFragment(int listPosition);
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View)object);
-        viewList.remove(position);
-        object = null;
+        super.destroyItem(container, position, object);
     }
 
     @Override
@@ -97,16 +92,16 @@ public abstract class LoopingPagerAdapter<T> extends PagerAdapter implements ILo
     }
 
     @Override
-    public int getListCount () {
+    public int getListCount() {
         return itemList == null ? 0 : itemList.size();
     }
 
-    private int getListPosition (int position) {
+    private int getListPosition(int position) {
         if (!(isInfinite && canInfinite)) return position;
         int arrayListPosition;
         if (position == 0) {
-            arrayListPosition = getCount()-1-2; //First item is a dummy of last item
-        } else if (position > getCount() -2) {
+            arrayListPosition = getCount() - 1 - 2; //First item is a dummy of last item
+        } else if (position > getCount() - 2) {
             arrayListPosition = 0; //Last item is a dummy of first item
         } else {
             arrayListPosition = position - 1;
@@ -119,7 +114,7 @@ public abstract class LoopingPagerAdapter<T> extends PagerAdapter implements ILo
         if (isInfinite) {
             return itemList == null ? 0 : itemList.size();
         } else {
-            return itemList == null ? 0 : itemList.size()-1;
+            return itemList == null ? 0 : itemList.size() - 1;
         }
     }
 }

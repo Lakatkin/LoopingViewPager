@@ -70,7 +70,7 @@ public class LoopingViewPager extends ViewPager {
 
                     if (indicatorPageChangeListener != null && scrollState == SCROLL_STATE_DRAGGING) {
                         indicatorPageChangeListener.onIndicatorProgress(realPosition, Math.abs(position) - 1);
-                        Log.i("indicator", "Progress: " + realPosition + ", " + String.valueOf(Math.abs(position)-1)
+                        Log.i("indicator", "Progress: " + realPosition + ", " + String.valueOf(Math.abs(position) - 1)
                                 + ", ScrollState: " + scrollState + ", currentPagePosition: " + currentPagePosition);
                     }
                 }
@@ -178,10 +178,10 @@ public class LoopingViewPager extends ViewPager {
         if (!isInfinite) {
             return currentPagePosition;
         } else {
-            if (!(getAdapter() instanceof LoopingPagerAdapter)) return currentPagePosition;
+            if (!(getAdapter() instanceof ILoopingPagerAdapter)) return currentPagePosition;
             if (currentPagePosition == 0) { //Dummy last item is selected. Indicator should be at the last one
-                return ((LoopingPagerAdapter) getAdapter()).getListCount()-1;
-            } else if (currentPagePosition == ((LoopingPagerAdapter) getAdapter()).getLastItemPosition() + 1) {
+                return ((ILoopingPagerAdapter) getAdapter()).getListCount() - 1;
+            } else if (currentPagePosition == ((ILoopingPagerAdapter) getAdapter()).getLastItemPosition() + 1) {
                 //Dummy first item is selected. Indicator should be at the first one
                 return 0;
             } else {
@@ -196,13 +196,13 @@ public class LoopingViewPager extends ViewPager {
      * This method should be used before currentPagePosition is updated, when user is trying to
      * select a different page, i.e. onPageScrolled() is triggered.
      */
-    public int getSelectingIndicatorPosition (boolean isToTheRight) {
+    public int getSelectingIndicatorPosition(boolean isToTheRight) {
         int delta = isToTheRight ? 1 : -1;
         if (isInfinite) {
-            if (!(getAdapter() instanceof LoopingPagerAdapter)) return currentPagePosition + delta;
+            if (!(getAdapter() instanceof ILoopingPagerAdapter)) return currentPagePosition + delta;
             if (currentPagePosition == 1 && !isToTheRight) { //Special case for first page to last page
-                return ((LoopingPagerAdapter)getAdapter()).getLastItemPosition() -1;
-            } else if (currentPagePosition == ((LoopingPagerAdapter)getAdapter()).getLastItemPosition()
+                return ((ILoopingPagerAdapter) getAdapter()).getLastItemPosition() - 1;
+            } else if (currentPagePosition == ((ILoopingPagerAdapter) getAdapter()).getLastItemPosition()
                     && isToTheRight) { //Special case for last page to first page
                 return 0;
             } else {
@@ -218,8 +218,8 @@ public class LoopingViewPager extends ViewPager {
      * This method returns the expected count of indicators.
      */
     public int getIndicatorCount() {
-        if (getAdapter() instanceof LoopingPagerAdapter) {
-            return ((LoopingPagerAdapter) getAdapter()).getListCount();
+        if (getAdapter() instanceof ILoopingPagerAdapter) {
+            return ((ILoopingPagerAdapter) getAdapter()).getListCount();
         } else {
             return getAdapter().getCount();
         }
@@ -231,6 +231,8 @@ public class LoopingViewPager extends ViewPager {
      * in order to reset current selected item and currentPagePosition and autoPageSelectionLock.
      */
     public void reset() {
+       /* if (getAdapter() instanceof ILoopingPagerAdapter)
+            ((ILoopingPagerAdapter) getAdapter()).clearAll(this);*/
         if (isInfinite) {
             setCurrentItem(1, false);
             currentPagePosition = 1;

@@ -1,10 +1,12 @@
 package com.asksira.loopingviewpagerdemo;
 
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.asksira.loopingviewpager.ILoopingPagerAdapter;
 import com.asksira.loopingviewpager.LoopingViewPager;
 import com.rd.PageIndicatorView;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     LoopingViewPager viewPager;
-    DemoInfiniteAdapter adapter;
+    ILoopingPagerAdapter adapter;
     PageIndicatorView indicatorView;
     Button changeDataSetButton;
 
@@ -34,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new DemoInfiniteAdapter(this, createDummyItems(), true);
-        viewPager.setAdapter(adapter);
+        //PagerAdapter adapterImpl = new DemoInfiniteAdapter(this, createDummyItems(), true);
+        PagerAdapter adapterImpl=new DemoFragmentAdapter(this,getSupportFragmentManager(), createDummyItems(), true);
+        adapter = (ILoopingPagerAdapter) adapterImpl;
+        viewPager.setAdapter(adapterImpl);
 
         //Custom bind indicator
         indicatorView.setCount(viewPager.getIndicatorCount());

@@ -46,4 +46,5 @@ public class DemoInfiniteAdapter extends LoopingPagerAdapter<Integer> {
                 return android.R.color.black;
         }
     }
+
 }

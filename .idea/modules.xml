@@ -2,9 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LoopingViewPagerDemo.iml" filepath="$PROJECT_DIR$/LoopingViewPagerDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/LoopingViewPager.iml" filepath="$PROJECT_DIR$/.idea/LoopingViewPager.iml" />
+      <module fileurl="file://C:\Users\mlakatkin\StudioProjects\LoopingViewPager\LoopingViewPagerDemo.iml" filepath="C:\Users\mlakatkin\StudioProjects\LoopingViewPager\LoopingViewPagerDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\mlakatkin\StudioProjects\LoopingViewPager\app\app.iml" filepath="C:\Users\mlakatkin\StudioProjects\LoopingViewPager\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/loopingviewpager/loopingviewpager.iml" filepath="$PROJECT_DIR$/loopingviewpager/loopingviewpager.iml" />
+      <module fileurl="file://C:\Users\mlakatkin\StudioProjects\LoopingViewPager\loopingviewpager\loopingviewpager.iml" filepath="C:\Users\mlakatkin\StudioProjects\LoopingViewPager\loopingviewpager\loopingviewpager.iml" />
     </modules>
   </component>
 </project>
